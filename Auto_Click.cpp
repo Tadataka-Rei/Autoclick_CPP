@@ -8,7 +8,7 @@ void menu(bool bState)
 
     system("cls");
 
-    std::cout << "GorillaX' autoclicker v1.0\n";
+    std::cout << "autoclicker v1.0\n";
 
     if (bState)
     {
