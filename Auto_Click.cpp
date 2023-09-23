@@ -20,13 +20,15 @@ void menu(bool bState)
     }
 }
 
-void Click(int wait)
+void CALLBACK click(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
 {
     mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-    Sleep(wait);
+
+    Sleep(100);
+
     mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-    Sleep(wait);
 }
+
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int nWinMode)
@@ -54,7 +56,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
         MessageBox(NULL, TEXT("Can't Register the Window Class!"), szAppName, MB_OK | MB_ICONERROR);
         return E_FAIL;
     }
-
     // title
     static const TCHAR szAppTitle[] = TEXT("Auto_Clicker_1.0");
 
@@ -78,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
     static BOOL bRet;
     static MSG msg;
 
-    // vong lap chinh
+    // main loop
     while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) // 0 = WM_QUIT
     {
         if (-1 == bRet)
@@ -90,6 +91,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
+        }
+
+        SetTimer(NULL, 0, 1000 * 3, (TIMERPROC)&click);
+        if (GetAsyncKeyState(VK_LCONTROL))
+        {
+            break;
         }
     }
 
