@@ -2,6 +2,7 @@
 #include <Windows.h>
 
 bool bState{false};
+bool Auto{false};
 
 void menu(bool bState)
 {
@@ -22,11 +23,14 @@ void menu(bool bState)
 
 void CALLBACK click(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
 {
-    mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+    if (Auto)
+    {
+        mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 
-    Sleep(100);
+        Sleep(100);
 
-    mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+        mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+    }
 }
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -94,9 +98,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
         }
 
         SetTimer(NULL, 0, 1000 * 3, (TIMERPROC)&click);
+
         if (GetAsyncKeyState(VK_LCONTROL))
         {
-            break;
+            Auto = !Auto;
+
+            Sleep(500);
         }
     }
 
