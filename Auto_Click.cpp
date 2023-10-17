@@ -40,6 +40,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
     static const TCHAR szAppName[] = TEXT("MinimalWindowsApp");
 
     WNDCLASSEX wc;
+    HWND hwnd;
+    MSG messages;
 
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -54,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
     wc.lpszMenuName = NULL;
     wc.lpszClassName = szAppName;
 
-    // neu tao clas window bi loi
+    // check if cant create window class
     if (0 == RegisterClassEx(&wc))
     {
         MessageBox(NULL, TEXT("Can't Register the Window Class!"), szAppName, MB_OK | MB_ICONERROR);
@@ -64,11 +66,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
     static const TCHAR szAppTitle[] = TEXT("Auto_Clicker_1.0");
 
     // create the window
-    HWND hwnd = CreateWindow(szAppName, szAppTitle,
-                             WS_OVERLAPPEDWINDOW,
-                             CW_USEDEFAULT, CW_USEDEFAULT,
-                             CW_USEDEFAULT, CW_USEDEFAULT,
-                             NULL, NULL, hInstance, NULL);
+    hwnd = CreateWindow(szAppName, szAppTitle,
+                        WS_OVERLAPPEDWINDOW,
+                        CW_USEDEFAULT, CW_USEDEFAULT,
+                        CW_USEDEFAULT, CW_USEDEFAULT,
+                        NULL, NULL, hInstance, NULL);
 
     if (NULL == hwnd)
     {
@@ -78,6 +80,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
     // update va show window
     ShowWindow(hwnd, nWinMode);
+    while (GetMessage(&messages, NULL, 0, 0))
+    {
+        // Translate virtual-key messages into character messages
+        TranslateMessage(&messages);
+        // Send message to WindowProcedure
+        DispatchMessage(&messages);
+    }
+
+    // The program return-value is 0 - The value that PostQuitMessage() gave
+    return messages.wParam;
     UpdateWindow(hwnd);
 
     static BOOL bRet;
@@ -119,14 +131,40 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         hdc = BeginPaint(hwnd, &ps);
 
-        // draw some text in the client area
+        // draw some text
         RECT rect;
         GetClientRect(hwnd, &rect);
         DrawText(hdc, TEXT("CLICK!"), -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-
         EndPaint(hwnd, &ps);
-        return S_OK;
 
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case 3:
+            PostQuitMessage(0);
+            break;
+        case 1:
+            MessageBox(hwnd, TEXT("Click button clicked!"), TEXT("Button Clicked"), MB_OK);
+            break;
+        case 2:
+            MessageBox(hwnd, TEXT("Back button clicked!"), TEXT("Button Clicked"), MB_OK);
+            break;
+        }
+        break;
+    case WM_CREATE:
+    {
+        HMENU hMenu, hSubMenu;
+        hMenu = CreateMenu();
+        hSubMenu = CreatePopupMenu();
+        AppendMenu(hSubMenu, MF_STRING, 1, TEXT("Click"));
+        AppendMenu(hSubMenu, MF_STRING, 2, TEXT("Setting"));
+        AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT_PTR)hSubMenu, TEXT("UI"));
+        AppendMenu(hMenu, MF_STRING, 3, TEXT("Exit"));
+
+        // Set the menu to the window
+        SetMenu(hwnd, hMenu);
+        break;
+    }
     case WM_DESTROY:
         // EXIT
         PostQuitMessage(0);
