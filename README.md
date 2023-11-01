@@ -1,20 +1,11 @@
-
-# README
-
-## Project: autoclicker
-
-## Language: C++
-
-## Status: In progress
-
-# Description:
+# **Project:** *autoclicker*
 
 This project is a simple auto clicker program written in C++ with windows.h lib. It allows you to automatically click the mouse at a specified interval.
 
-## Features:
+# **Features:**
 
 Start/stop autoclicker with left ctrl key
-## Usage:
+# **Usage:**
 
 To compile the program, run the following command:
 
@@ -24,11 +15,11 @@ To run the program, simply execute the following command:
 ./autoclicker
 The program will start autoclicking the mouse at a default interval of 500 milliseconds. Press the Left Control key on your keyboard to turn on/off.
 
-#Limitations:
+**Limitations:**
 
 The program is still under development. Additionally, the program may not work with all applications.
 
--No customization added.
+No customization added.
 -
 
 All contributions are welcome. Please feel free to fork the repository and submit a pull request with your changes.
