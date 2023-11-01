@@ -4,23 +4,6 @@
 bool bState{false};
 bool Auto{false};
 
-void menu(bool bState)
-{
-
-    system("cls");
-
-    std::cout << "autoclicker v1.0\n";
-
-    if (bState)
-    {
-        std::cout << "Status: ON\n";
-    }
-    else
-    {
-        std::cout << "Status: OFF\n";
-    }
-}
-
 void CALLBACK click(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
 {
     if (Auto)
@@ -80,21 +63,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
 
     // update va show window
     ShowWindow(hwnd, nWinMode);
-    while (GetMessage(&messages, NULL, 0, 0))
-    {
-        // Translate virtual-key messages into character messages
-        TranslateMessage(&messages);
-        // Send message to WindowProcedure
-        DispatchMessage(&messages);
-    }
 
-    // The program return-value is 0 - The value that PostQuitMessage() gave
-    return messages.wParam;
     UpdateWindow(hwnd);
 
     static BOOL bRet;
     static MSG msg;
 
+    //*************************************************************************//
     // main loop
     while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) // 0 = WM_QUIT
     {
@@ -108,10 +83,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-
         SetTimer(NULL, 0, 1000 * 3, (TIMERPROC)&click);
-
-        if (GetAsyncKeyState(VK_LCONTROL))
+        if (GetAsyncKeyState(VK_LCONTROL) & 1)
         {
             Auto = !Auto;
 
