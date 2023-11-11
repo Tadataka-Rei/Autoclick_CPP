@@ -20,7 +20,7 @@ The program will start autoclicking the mouse at a default interval of 500 milli
 The program is still under development. Additionally, the program may not work with all applications.
 
 No customization added.
--
+
 
 All contributions are welcome. Please feel free to fork the repository and submit a pull request with your changes.
 
